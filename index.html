@@ -669,20 +669,197 @@ footer span { color: var(--accent); }
   to { opacity: 1; }
 }
 
+/* ========== HAMBURGER BUTTON ========== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+  z-index: 200;
+  flex-shrink: 0;
+}
+
+.hamburger:hover { background: var(--alt); }
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s, width 0.3s;
+  transform-origin: center;
+}
+
+/* X state */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ========== MOBILE DRAWER ========== */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+}
+
+.mobile-nav.open { pointer-events: all; }
+
+/* Backdrop */
+.mobile-nav-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(30,20,12,0.45);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+}
+
+.mobile-nav.open .mobile-nav-backdrop { opacity: 1; }
+
+/* Drawer panel */
+.mobile-nav-panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(300px, 82vw);
+  height: 100%;
+  background: var(--bg);
+  padding: 88px 28px 40px;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: -8px 0 40px rgba(62,47,35,0.12);
+  overflow-y: auto;
+}
+
+.mobile-nav.open .mobile-nav-panel { transform: translateX(0); }
+
+.mobile-nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav-links a {
+  display: block;
+  text-decoration: none;
+  color: var(--sub);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  letter-spacing: 0.01em;
+}
+
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+  background: var(--alt);
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+.mobile-nav-links li {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.mobile-nav.open .mobile-nav-links li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* stagger each item */
+.mobile-nav.open .mobile-nav-links li:nth-child(1) { transition-delay: 0.08s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(2) { transition-delay: 0.13s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(3) { transition-delay: 0.18s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(4) { transition-delay: 0.23s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(5) { transition-delay: 0.28s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(6) { transition-delay: 0.33s; }
+.mobile-nav.open .mobile-nav-links li:nth-child(7) { transition-delay: 0.38s; }
+
+.mobile-nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 16px;
+}
+
+.mobile-nav-footer {
+  padding: 0 16px;
+}
+
+.mobile-nav-footer p {
+  font-size: 0.78rem;
+  color: var(--sub);
+  line-height: 1.5;
+}
+
+.mobile-nav-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
 /* ========== RESPONSIVE ========== */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
+
+  /* Show hamburger, hide desktop nav */
+  .hamburger { display: flex; }
+  .nav-links  { display: none; }
+  .mobile-nav { display: block; }
+
+  /* Section padding tighter */
+  .section { padding: 68px 0; }
+
+  /* Hero tweaks */
+  .hero-name  { font-size: clamp(2rem, 10vw, 3rem); }
+  .hero-tag   { font-size: 0.65rem; }
+  .hero-cta   { flex-direction: column; align-items: center; }
+
+  /* All multi-col grids → single col */
   .about-grid,
   .edu-wrapper,
   .projects-grid,
   .two-col,
-  .extra-grid,
+  .extra-grid  { grid-template-columns: 1fr; }
+
+  /* About grid: swap order so text comes first */
+  .about-grid  { gap: 32px; }
+  .skills-block { order: 2; }
+  .about-text   { order: 1; }
+
+  /* Skill tags slightly bigger tap targets */
+  .skill-tag { padding: 7px 14px; font-size: 0.78rem; }
+
+  /* Experience card padding */
+  .exp-card { padding: 22px 20px; }
+
+  /* Contact: 2 cols on phone */
+  .contact-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .contact-card { padding: 18px 12px; }
+  .contact-card .info { font-size: 0.72rem; }
+
+  /* Reduce section title size */
+  h2.section-title { font-size: clamp(1.5rem, 6vw, 2rem); margin-bottom: 28px; }
+
+  /* Scroll hint hidden on mobile */
+  .scroll-hint { display: none; }
+}
+
+@media (max-width: 420px) {
   .contact-grid { grid-template-columns: 1fr; }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hero-cta { flex-direction: column; align-items: center; }
+  .hero-name { font-size: 2rem; }
 }
 </style>
 </head>
@@ -701,8 +878,32 @@ footer span { color: var(--accent); }
       <li><a href="#certifications">Certifications</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 </header>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav-backdrop" id="mobile-backdrop"></div>
+  <div class="mobile-nav-panel">
+    <ul class="mobile-nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="mobile-nav-divider"></div>
+    <div class="mobile-nav-footer">
+      <p>📍 Belgaum, Karnataka<br>
+      <a href="mailto:sahaswalvekar@gmail.com">sahaswalvekar@gmail.com</a></p>
+    </div>
+  </div>
+</div>
 
 <main>
 
@@ -1035,6 +1236,46 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
+/* ---- Hamburger / Mobile Drawer ---- */
+const hamburger   = document.getElementById('hamburger');
+const mobileNav   = document.getElementById('mobile-nav');
+const backdrop    = document.getElementById('mobile-backdrop');
+const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+
+function openDrawer() {
+  hamburger.classList.add('open');
+  hamburger.setAttribute('aria-expanded', 'true');
+  mobileNav.classList.add('open');
+  mobileNav.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  mobileNav.classList.remove('open');
+  mobileNav.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+hamburger.addEventListener('click', () =>
+  mobileNav.classList.contains('open') ? closeDrawer() : openDrawer()
+);
+
+backdrop.addEventListener('click', closeDrawer);
+
+// Close on link tap + smooth scroll
+mobileLinks.forEach(a => {
+  a.addEventListener('click', () => {
+    closeDrawer();
+  });
+});
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDrawer();
+});
+
 /* ---- Navbar: scroll shadow + hide-on-scroll-down ---- */
 const header = document.getElementById('site-header');
 let lastScroll = 0;
@@ -1045,7 +1286,6 @@ window.addEventListener('scroll', () => {
   requestAnimationFrame(() => {
     const cur = window.scrollY;
     header.classList.toggle('scrolled', cur > 20);
-    // Hide on scroll down (only after 120px), reveal on scroll up
     if (cur > 120) {
       header.classList.toggle('hide-nav', cur > lastScroll + 4);
     } else {
@@ -1057,22 +1297,21 @@ window.addEventListener('scroll', () => {
   ticking = true;
 }, { passive: true });
 
-/* ---- Sliding nav pill ---- */
-const navList   = document.querySelector('.nav-links');
-const pill      = document.createElement('div');
-pill.className  = 'nav-pill';
+/* ---- Sliding nav pill (desktop only) ---- */
+const navList = document.querySelector('.nav-links');
+const pill     = document.createElement('div');
+pill.className = 'nav-pill';
 navList.prepend(pill);
 
 function movePill(el) {
   if (!el) return;
   const listRect = navList.getBoundingClientRect();
   const elRect   = el.getBoundingClientRect();
-  pill.style.width  = elRect.width + 'px';
+  pill.style.width     = elRect.width + 'px';
   pill.style.transform = `translateX(${elRect.left - listRect.left}px)`;
   pill.classList.add('visible');
 }
 
-/* Hover: slide pill to hovered link */
 document.querySelectorAll('.nav-links a').forEach(a => {
   a.addEventListener('mouseenter', () => movePill(a));
 });
@@ -1082,28 +1321,30 @@ navList.addEventListener('mouseleave', () => {
   if (active) movePill(active); else pill.classList.remove('visible');
 });
 
-/* ---- Active nav highlight via IntersectionObserver ---- */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
+/* ---- Active nav highlight (desktop + mobile) ---- */
+const sections    = document.querySelectorAll('section[id]');
+const navLinks    = document.querySelectorAll('.nav-links a');
 
 const sectionObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
+      const id = entry.target.id;
+      // Desktop
       navLinks.forEach(a => a.classList.remove('active'));
-      const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
-      if (active) {
-        active.classList.add('active');
-        movePill(active);
-      }
+      const active = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if (active) { active.classList.add('active'); movePill(active); }
+      // Mobile
+      mobileLinks.forEach(a => a.classList.remove('active'));
+      const mActive = document.querySelector(`.mobile-nav-links a[href="#${id}"]`);
+      if (mActive) mActive.classList.add('active');
     }
   });
 }, { rootMargin: '-35% 0px -60% 0px' });
 
 sections.forEach(s => sectionObserver.observe(s));
 
-/* ---- Scroll reveal with stagger within viewport ---- */
+/* ---- Scroll reveal ---- */
 const reveals = document.querySelectorAll('.reveal');
-
 const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
